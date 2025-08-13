@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X‑ray — Профессиональный гайд по DCA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Visual polish */
+    :root{
+      --glass-bg: rgba(255,255,255,0.03);
+      --accent: #22c55e;
+      --muted: #9ca3af;
+    }
+    body { background: linear-gradient(180deg,#0b1220 0%, #071018 100%); }
+    .neon{ color:var(--accent); text-shadow:0 0 6px rgba(34,197,94,0.15), 0 0 18px rgba(34,197,94,0.06);}    
+    .glass{ background:var(--glass-bg); backdrop-filter: blur(6px); }
+    .lead{ color:var(--muted); }
+    /* simple accordion */
+    .accordion-toggle { cursor: pointer; }
+  </style>
+</head>
+<body class="text-gray-100 font-sans leading-relaxed">
+
+  <!-- NAV -->
+  <header class="container mx-auto px-6 py-6 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-green-600 to-green-400 flex items-center justify-center shadow-lg">
+        <span class="font-bold text-black">X</span>
+      </div>
+      <div>
+        <h1 class="text-xl font-extrabold neon">X‑ray</h1>
+        <div class="text-sm lead">Гайд по использованию DCA‑бота (Solana)</div>
+      </div>
+    </div>
+    <nav class="flex gap-4 items-center">
+      <a href="#what" class="text-sm hover:underline">Что такое DCA</a>
+      <a href="#how" class="text-sm hover:underline">Как работает</a>
+      <a href="#scenarios" class="text-sm hover:underline">Сценарии</a>
+      <a href="#cta" class="bg-green-600 text-black px-4 py-2 rounded font-medium">Вступить</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="container mx-auto px-6 py-12 text-center">
+    <div class="glass rounded-xl p-10 shadow-xl">
+      <h2 class="text-4xl md:text-5xl font-extrabold neon">DCA‑бот: от азов до профита</h2>
+      <p class="mt-4 max-w-3xl mx-auto lead">Профессиональный, развернутый гайд по работе с DCA‑ордерами в экосистеме Solana. Быстро, понятно, с реальными сценариями и анализом риска.</p>
+      <div class="mt-6 flex items-center justify-center gap-4">
+  
+        <a href="#how" class="px-6 py-3 bg-green-600 text-black rounded-lg">Как работает</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREFACE -->
+  <section id="preface" class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+     
+      <h3 class="text-2xl font-bold neon">Введение: что такое DCA в сети Solana</h3>
+      <p class="mt-4 lead">DCA — Dollar Cost Averaging: усреднение цены покупки/продажи через серию ордеров по времени. На Solana DCA часто реализуется через DEX‑агрегаторы (Birdeye) и сопровождается бот‑мониторингом крупных ордеров.</p>
+
+      <h4 class="mt-6 font-semibold text-green-300">Ключевые понятия</h4>
+      <ul class="list-disc pl-6 mt-3 space-y-2">
+        <li><strong>PI (Price Impact)</strong> — влияние ордера на цену пула.</li>
+        <li><strong>V‑5m / V‑1h</strong> — объёмы за 5 и 60 минут соответственно.</li>
+        <li><strong>Liquidity</strong> — суммарная ликвидность по пулу(ам).</li>
+        <li><strong>Owner</strong> — адрес/кошелёк, запускающий DCA; важно смотреть его историю.</li>
+      </ul>
+
+      <h4 class="mt-6 font-semibold text-green-300">Пример ордера</h4>
+      <p class="lead">Типичный сигнал: алерт — продаётся токен на $2,000,000 частями по $72,000 каждую минуту в течение 31 минуты → ~10% пула. Это значит: сильное давление на цену; возможна ликвидация стаканов.</p>
+    </div>
+  </section>
+
+  <!-- BOT UI DESCRIPTION -->
+  <section id="how" class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Как работает инструмент — разбор интерфейса бота</h3>
+
+      <p class="lead">Бот агрегирует данные с DEX'ов через Birdeye и показывает готовую статистику по DCA‑ордерам: направление, суммарный объём, PI, V‑5m, V‑1h.</p>
+
+      <div class="mt-6 grid md:grid-cols-2 gap-6">
+        <div class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Основные строки</h4>
+          <ul class="list-disc pl-5 mt-3 lead">
+            <li>Кнопки Buy / Sell — направление ордера.</li>
+            <li>MC, Liq, Price — капитализация, ликвидность и цена.</li>
+            <li>PI и VI — показатели влияния на рынок и объёмы.</li>
+          </ul>
+        </div>
+        
+       
+          </ul>
+        </div>
+      </div>
+
+      <p class="mt-6 lead">Важно: для статистики учитываются лишь данные с DEX'ов — централизованные биржи в расчёт не включаются (это частая ошибка новичков).</p>
+    </div>
+  </section>
+
+  <!-- POOLS AND FLAGS -->
+  <section class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Пулы: что считать Green / Red‑flags</h3>
+      <div class="mt-4 grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-semibold text-green-300">Green‑flag пулы</h4>
+          <ul class="list-disc pl-5 mt-3 lead">
+            <li>Raydium</li>
+            <li>Meteora</li>
+            <li>Orca</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-red-300">Red‑flag пулы</h4>
+          <ul class="list-disc pl-5 mt-3 lead">
+            <li>SolFI</li>
+            <li>Phoenix</li>
+            <li>Openbook</li>
+            <li>Lifinity Swap</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="mt-6 lead">Если транзакции идут по нескольким пулам одновременно, ликвидность рассеивается — влияние DCA на цену ослабевает. Идеал — один доминирующий пул.</p>
+    </div>
+  </section>
+
+  <!-- LISTING PATH AND LIQUIDITY -->
+  <section class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Эволюция щитка — где считать влияние ордера</h3>
+      <p class="lead mt-4">Щиток проходит путь листингов: DEX → MEXC → Coinbase/OKX → Binance. На каждой ступени меняется доступная ликвидность и требования к объёму ордера, чтобы влиять на цену.</p>
+
+      <ol class="list-decimal pl-6 mt-4 lead space-y-2">
+        <li>Только DEX: DCA сильно влияет на цену.</li>
+        <li>MEXC (фьючи): влияние сохраняется, но начинает зависеть от ликвидности биржи.</li>
+        <li>Крупные CEX: для воздействия требуются значительно большие объёмы.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- BTC DOMINANCE AND RISK MANAGEMENT -->
+  <section class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Учет рынка: BTC, SOL и доминация</h3>
+      <p class="lead mt-4">DCA — это не автономная стратегия: нужно учитывать общерыночные факторы. Важно следить за объёмами Bitcoin (V>25–30 BTC/мин) и динамикой доминации — это может полностью изменить поведение альткоинов.</p>
+
+      <div class="mt-6 grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-semibold">Практический чек‑лист</h4>
+          <ul class="list-disc pl-5 mt-3 lead">
+            <li>Открыть график BTC (объёмы и направление).</li>
+            <li>Проверить реакцию SOL и альтов.</li>
+            <li>Установить стоп‑лоссы и план выхода заранее.</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold">Риски</h4>
+          <p class="lead mt-3">Сильные рыночные движения могут развернуть цену против позиции; важно иметь план по управлению риском и не злоупотреблять плечами.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECONDARY ORDERS & WALLS -->
+  <section class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Второстепенные покупки и «стена лимиток»</h3>
+      <p class="lead mt-4">Иногда ордер покрывается сериямaми меньших лимиток — это может дать ложное чувство безопасности. Явление "стены" — большой набор лимитных ордеров на уровне — способно тормозить движение цены до тех пор, пока стена не будет снята.</p>
+
+      <h4 class="mt-4 font-semibold">Как это учитывать</h4>
+      <ul class="list-disc pl-5 mt-3 lead">
+        <li>Оценивать глубину стакана перед входом.</li>
+        <li>Понимать, сколько времени потребуется для пробития стены.</li>
+        <li>Не открывать большую позицию, если стакан пуст или раздроблен.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- EXECUTION LAGS -->
+  <section class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Притормаживание исполнения ордеров</h3>
+      <p class="lead mt-4">На Solana из‑за загрузки сети DCA‑транзакции могут исполняться не каждую минуту, а с задержкой 2–5 минут. Это влияет на предсказуемость и требуется учитывать при расчёте прибыли и управлении позой.</p>
+    </div>
+  </section>
+
+  <!-- EARNING METHODS -->
+  <section id="earn" class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Способы заработка</h3>
+      <p class="lead mt-4">На основе DCA‑сигналов можно зарабатывать разными методами — от спота до фьючерсов. Каждый метод имеет особенности риска и требования к капиталу.</p>
+
+      <div class="mt-6 grid md:grid-cols-3 gap-6">
+        <div class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Спот</h4>
+          <p class="lead mt-2">Работает при солидном балансе (рекомендация ≥ $1000). Часто используется через Jupiter для свопов.</p>
+        </div>
+        <div class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Фьючерсы (CEX)</h4>
+          <p class="lead mt-2">Более высокий риск и потенциально 2–4× доходности. Важен выбор типа маржи (изолированная vs кросс) и управление плечом.</p>
+        </div>
+        <div class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Другие подходы</h4>
+          <p class="lead mt-2">Арбитраж между пулами и биржами, своп‑стратегии и т.д. Требуют дополнительных навыков.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- STRATEGIES / SCENARIOS -->
+  <section id="scenarios" class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Сценарии и стратегии DCA‑ордеров</h3>
+      <p class="lead mt-4">Ниже — типовые сценарии с ориентировочной оценкой винрейта (на основе наблюдений автора). Это не гарантия, а эмпирические оценки.</p>
+
+      <div class="mt-6 space-y-6">
+
+        <article class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Сценарий 1 — Один крупный DCA (PI &gt; 10%)</h4>
+          <p class="mt-2 lead">Высокий PI — сильное воздействие на цену. Винрейт зависит от листинга:</p>
+          <ul class="list-disc pl-5 mt-2 lead">
+            <li>DEX + MEXC — ~100%</li>
+            <li>Bybit / OKX присутствуют — ~90%</li>
+            <li>Binance фьючи — ~80%</li>
+            <li>Binance spot — ~60%</li>
+          </ul>
+        </article>
+
+        <article class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Сценарий 2 — Несколько DCA ордеров</h4>
+          <p class="mt-2 lead">Плюс цепочки ордеров в том, что давление на стакан происходит многократно — откупить такое тяжело. Часто даёт лучший винрейт, чем одиночный ордер аналогичного суммарного размера.</p>
+        </article>
+
+        <article class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Сценарий 3 — Долгая частота</h4>
+          <p class="mt-2 lead">Медленные ордера чаще теряют эффективность — винрейт падёт; рекомендуется избегать или повышать чек‑параметры.</p>
+        </article>
+
+        <article class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Сценарий 4 — Короткий по времени, крупный DCA</h4>
+          <p class="mt-2 lead">Высокая волатильность и риск сквизов. Рекомендуется быстрый вход/выход и чёткий план по управлению позой.</p>
+        </article>
+
+        <article class="p-4 bg-gray-900 rounded">
+          <h4 class="font-semibold">Сценарий 5 — Очень маленькие объёмы</h4>
+          <p class="mt-2 lead">Проблемы с пустым стаканом и плохим исполнением при закрытии; требуется аккуратность и тестирование.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS: PREPARE, ENTRY, EXIT -->
+  <section class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Процесс работы — подготовка, вход, управление и выход</h3>
+      <ol class="list-decimal pl-6 mt-4 lead space-y-3">
+        <li><strong>Подготовка:</strong> держите вкладки MEXC, графики BTC, доминацию и Solscan открыты; настройте оповещения.</li>
+        <li><strong>Анализ ордера:</strong> проверьте PI, Liquidity, V‑5m, пул(ы), owner / history.</li>
+        <li><strong>Вход:</strong> либо быстрый маркет/маркет‑софт (MTL), либо ждать реакции после первых транзакций.</li>
+        <li><strong>Управление позой:</strong> следите за общерыночными событиями, объёмами BTC и реакцией DEX.</li>
+        <li><strong>Выход:</strong> при исчерпании ликвидности DCA‑протокола или достижении цели — фиксируйте прибыль.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="container mx-auto px-6 py-8">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Частые вопросы</h3>
+      <div class="mt-4 space-y-4 text-lg">
+        <details class="bg-gray-900 p-4 rounded">
+          <summary class="font-semibold accordion-toggle">Можно ли заработать на споте?</summary>
+          <p class="mt-2 lead">Да, но требуется больший стартовый капитал (рекомендация ≥ $1000) и аккуратное управление.</p>
+        </details>
+        <details class="bg-gray-900 p-4 rounded">
+          <summary class="font-semibold accordion-toggle">Какой тип маржи выбрать на фьючах?</summary>
+          <p class="mt-2 lead">Изолированная — для новичков (контролируемые потери). Кросс — для опытных, но с риском больших просадок.</p>
+        </details>
+        <details class="bg-gray-900 p-4 rounded">
+          <summary class="font-semibold accordion-toggle">Что делать при «ректе»?</summary>
+          <p class="mt-2 lead">Анализировать ошибки, не усугублять лудированием, снизить размер позы и учиться на ошибках.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT & CTA -->
+  <section id="cta" class="container mx-auto px-6 py-12 text-center">
+    <div class="glass p-8 rounded-xl">
+      <h3 class="text-2xl font-bold neon">Готовы начать или хотите глубже?</h3>
+      <p class="lead mt-3">Присоединяйтесь к сообществу X‑ray для обсуждений и совместного роста.</p>
+      <div class="mt-6">
+        <a href="https://t.me/eyeofgodsss" target="_blank" class="bg-green-600 text-black px-6 py-3 rounded font-semibold">Вступить в Telegram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="container mx-auto px-6 py-8 text-center text-gray-400">
+    <div class="max-w-3xl mx-auto">
+      <p>© 2025 X‑ray / Автор: Samara & 2DR.</p>
+      <p class="mt-2 lead">Важно: Материал носит исключительно информационный характер. Мы не даём инструкций по обходу правил бирж или нарушению законодательства.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
+
